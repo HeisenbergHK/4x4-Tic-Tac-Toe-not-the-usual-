@@ -1,3 +1,15 @@
+"""
+/******************************************************************************
+ *  File:           Tic Tac Toe
+ *  Author:         Hassan Kalantari
+ *  Email:          hasan.kalantari29@gmail.com
+ *  GitHub:         HeisenbergHK
+ *  Description:    This is the old fashion Tic Tac Toe game but in a 4x4 board
+                    and the winning condition is not having all the X's or O's in
+                    a row, but creating an L shape using 4 marks
+ *  Last Modified: (May 14, 2024)
+ *****************************************************************************/
+"""
 import pygame
 import sys
 
