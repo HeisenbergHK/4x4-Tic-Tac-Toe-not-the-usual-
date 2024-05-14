@@ -18,9 +18,9 @@
    ```bash
    python3 tic_tac_toe.py
 
-  #Requirements
-  -python 3
-  -pygame library
+  # Requirements
+  - python 3
+  - pygame library
 
-  #How to Play
-  -The game is 
+  # How to Play
+  - The game is 
