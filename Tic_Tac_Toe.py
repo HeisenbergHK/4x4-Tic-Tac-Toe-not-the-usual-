@@ -1,16 +1,3 @@
-"""
-/******************************************************************************
- *  File:           Tic Tac Toe
- *  Author:         Hassan Kalantari
- *  Email:          hasan.kalantari29@gmail.com
- *  GitHub:         HeisenbergHK
- *  Description:    This is the old fashion Tic Tac Toe game but in a 4x4 board
-                    and the winning condition is not having all the X's or O's in
-                    a row, but creating an L shape using 4 marks
-
- *  Last Modified: (May 14, 2024)
- *****************************************************************************/
-"""
 import pygame
 import sys
 
@@ -29,6 +16,7 @@ SQUARE_SIZE = WIDTH // BOARD_COLS
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 LINE_COLOR = (0, 0, 0)
+MESSAGE_BOX_COLOR = (200, 200, 200)
 
 # Create the screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -108,8 +96,15 @@ def is_win(size, player, board):
                                 return True
                             else:
                                 return False
-                else:
-                    return False
+
+
+# Display winning message
+def display_winner(winner):
+    font = pygame.font.Font(None, 36)
+    text = font.render(f"{winner} wins!", True, BLACK)
+    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    pygame.draw.rect(screen, MESSAGE_BOX_COLOR, (WIDTH // 4, HEIGHT // 4, WIDTH // 2, HEIGHT // 2))
+    screen.blit(text, text_rect)
 
 
 # Main game loop
@@ -139,10 +134,13 @@ def main():
         screen.fill(WHITE)
         draw_grid()
         draw_board(board)
-        pygame.display.update()
         if is_win(BOARD_COLS, 'X', board):
-            break
-        if is_win(BOARD_COLS, 'O', board):
+            display_winner('X')
+        elif is_win(BOARD_COLS, 'O', board):
+            display_winner('O')
+        pygame.display.update()
+        if is_win(BOARD_COLS, 'X', board) or is_win(BOARD_COLS, 'O', board):
+            pygame.time.delay(2000)  # Delay for 2 seconds
             break
 
 
