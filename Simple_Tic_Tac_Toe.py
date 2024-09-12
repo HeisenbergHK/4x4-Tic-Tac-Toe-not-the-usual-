@@ -17,8 +17,8 @@ import sys
 pygame.init()
 
 # Constants
-WIDTH = 300
-HEIGHT = 300
+WIDTH = 500
+HEIGHT = 500
 LINE_WIDTH = 15
 BOARD_ROWS = 4
 BOARD_COLS = 4
@@ -41,10 +41,12 @@ def draw_grid():
     pygame.draw.line(screen, LINE_COLOR, (SQUARE_SIZE, 0), (SQUARE_SIZE, HEIGHT), LINE_WIDTH)
     pygame.draw.line(screen, LINE_COLOR, (2 * SQUARE_SIZE, 0), (2 * SQUARE_SIZE, HEIGHT), LINE_WIDTH)
     pygame.draw.line(screen, LINE_COLOR, (3 * SQUARE_SIZE, 0), (3 * SQUARE_SIZE, HEIGHT), LINE_WIDTH)
+    pygame.draw.line(screen, LINE_COLOR, (4 * SQUARE_SIZE, 0), (4 * SQUARE_SIZE, HEIGHT), LINE_WIDTH)
     # Horizontal lines
     pygame.draw.line(screen, LINE_COLOR, (0, SQUARE_SIZE), (WIDTH, SQUARE_SIZE), LINE_WIDTH)
     pygame.draw.line(screen, LINE_COLOR, (0, 2 * SQUARE_SIZE), (WIDTH, 2 * SQUARE_SIZE), LINE_WIDTH)
     pygame.draw.line(screen, LINE_COLOR, (0, 3 * SQUARE_SIZE), (WIDTH, 3 * SQUARE_SIZE), LINE_WIDTH)
+    pygame.draw.line(screen, LINE_COLOR, (0, 4 * SQUARE_SIZE), (WIDTH, 4 * SQUARE_SIZE), LINE_WIDTH)
 
 
 # Draw the Xs and Os
@@ -58,7 +60,7 @@ def draw_board(board):
                                  (col * SQUARE_SIZE + 20, (row + 1) * SQUARE_SIZE - 20), LINE_WIDTH)
             elif board[row][col] == 'O':
                 pygame.draw.circle(screen, BLACK, (int(col * SQUARE_SIZE + SQUARE_SIZE / 2),
-                                                   int(row * SQUARE_SIZE + SQUARE_SIZE / 2)), 27, int(LINE_WIDTH / 1.5))
+                                                   int(row * SQUARE_SIZE + SQUARE_SIZE / 2)), 45, int(LINE_WIDTH / 1.5))
 
 
 # Check if player is won?
@@ -110,50 +112,61 @@ def is_win(size, player, board):
                                 return False
 
 
+# H
+def is_board_full(board):
+    for row in board:
+        for i in row:
+            if i == '':
+                return False
+    return True
+
+
 # Display winning message
 def display_winner(winner):
     font = pygame.font.Font(None, 36)
-    text = font.render(f"{winner} wins!", True, BLACK)
+    if winner == 'X' or winner == 'O':
+        text = font.render(f"{winner} wins!", True, BLACK)
+    else:
+        text = font.render(f"{winner}", True, BLACK)
     text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     pygame.draw.rect(screen, MESSAGE_BOX_COLOR, (WIDTH // 4, HEIGHT // 4, WIDTH // 2, HEIGHT // 2))
     screen.blit(text, text_rect)
 
 
 # Main game loop
-def main():
-    board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
-    player = 'X'
+board = [['' for _ in range(BOARD_COLS)] for _ in range(BOARD_ROWS)]
+player = 'X'
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouseX = event.pos[0] // SQUARE_SIZE
-                mouseY = event.pos[1] // SQUARE_SIZE
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouseX = event.pos[0] // SQUARE_SIZE
+            mouseY = event.pos[1] // SQUARE_SIZE
 
-                if board[mouseY][mouseX] == '':
-                    board[mouseY][mouseX] = player
-                    if player == 'X':
-                        player = 'O'
-                    else:
-                        player = 'X'
+            if board[mouseY][mouseX] == '':
+                board[mouseY][mouseX] = player
+                if player == 'X':
+                    player = 'O'
+                else:
+                    player = 'X'
 
-                print(board)
+            print(board)
 
-        screen.fill(WHITE)
-        draw_grid()
-        draw_board(board)
-        if is_win(BOARD_COLS, 'X', board):
-            display_winner('X')
-        elif is_win(BOARD_COLS, 'O', board):
-            display_winner('O')
-        pygame.display.update()
-        if is_win(BOARD_COLS, 'X', board) or is_win(BOARD_COLS, 'O', board):
-            pygame.time.delay(2000)  # Delay for 2 seconds
-            break
+    screen.fill(WHITE)
+    draw_grid()
+    draw_board(board)
+    if is_board_full(board):
+        display_winner("It's a draw!")
+    elif is_win(BOARD_COLS, 'X', board):
+        display_winner('X')
+    elif is_win(BOARD_COLS, 'O', board):
+        display_winner('O')
 
-
-main()
+    pygame.display.update()
+    if is_board_full(board) or is_win(BOARD_COLS, 'X', board) or is_win(BOARD_COLS, 'O', board):
+        pygame.time.delay(2000)  # Delay for 2 seconds
+        break
